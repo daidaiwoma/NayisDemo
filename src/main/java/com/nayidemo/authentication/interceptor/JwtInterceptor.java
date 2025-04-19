@@ -35,7 +35,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
                 Claims claims = JWTUtil.parseToken(token);
                 String username = claims.getSubject();
-                request.setAttribute("username", username);
+
 
                 // ✅ 找出当前用户的旧 token
                 String oldToken = redisTemplate.opsForValue().get("user_token:" + username);
@@ -72,6 +72,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 //                }
 
                 }
+                request.setAttribute("username", username);
             }
             return true;
         }

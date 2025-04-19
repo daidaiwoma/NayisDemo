@@ -1,5 +1,6 @@
 package com.nayidemo.authentication.controller;
 
+import com.nayidemo.authentication.Service.UserService;
 import com.nayidemo.authentication.annotation.LoginRequired;
 import com.nayidemo.authentication.util.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +17,20 @@ public class UserController {
     private RedisTemplate<String, String> redisTemplate;
 
     @PostMapping("/login")
+    public String login(String username, String password) {
+        System.out.println("login mapping");
+        if ("nayi".equals(username)&&"123".equals(password)) {
+            String token = JWTUtil.generateToken(username,5000*60);
+            System.out.println("token generated"+token);
+            redisTemplate.opsForValue().set("user_token:" + username, token,5,TimeUnit.MINUTES);
+            return token;
+        }else{
+            return "nayi,123";
+        }
+    }
+
+
+    /*@PostMapping("/login")
     public String login(String username, String password) {
         // 模拟  实际业务应该查询数据库 并且写在Service
         String token;
@@ -37,11 +52,11 @@ public class UserController {
             throw new RuntimeException("用户名或密码错误");
         }
         return token;
-    }
+    }*/
 
     @GetMapping("/profile")
     @LoginRequired  // 自定义注解 拦截校验token
-    public String getUserProfile(HttpServletRequest request) {
+    String getUserProfile(HttpServletRequest request) {
         // 方法返回的是Object 为了保证类型安全 强制转换一次
         String username = (String) request.getAttribute("username");
         if (username == null) {

@@ -2,10 +2,16 @@ package com.nayidemo.authentication.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 
+/**
+ * SpringSecurity本身不提供JWT
+ * 自己实现 注册为Bean 方便使用
+ */
+@Component
 public class JWTUtil {
     // 设定一个固定秘钥
     private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
